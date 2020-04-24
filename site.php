@@ -25,15 +25,11 @@ $app->get("/categories/:idcategory", function($idcategory) {
 
 	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
 
-	var_dump($page);
-
 	$category = new Category(); 
 
 	$category->get((int)$idcategory);
 
 	$pagination = $category->getProductsPage($page);
-
-	//var_dump($pagination);
 
 	$pages = [];
 
@@ -59,7 +55,6 @@ $app->get("/products/:desurl", function($desurl) {
 
 	$product->getFromURL($desurl);
 
-
 	$page = new Page();
 	
 	$page->setTpl("product-detail",[
@@ -73,12 +68,12 @@ $app->get("/cart", function() {
 
 	$cart = Cart::getFromSession();
 
-	$page = new Page();
-	
+	$page = new Page(); 
+
 	$page->setTpl("cart", [
 		'cart'=>$cart->getValues(),
-		'products'=>$cart->getProducts()
-
+		'products'=>$cart->getProducts(),
+		'error'=>Cart::getMsgError()
 	]);
 
 });
@@ -99,8 +94,6 @@ $app->get("/cart/:idproduct/add", function($idproduct) {
 
 	}
 
-	$page = new Page();
-	
 	header("Location: /cart");
 	exit;
 
@@ -115,8 +108,6 @@ $app->get("/cart/:idproduct/minus", function($idproduct) {
 	$cart = Cart::getFromSession();
 
 	$cart->removeProduct($product);
-
-	$page = new Page();
 	
 	header("Location: /cart");
 	exit;
@@ -132,14 +123,21 @@ $app->get("/cart/:idproduct/remove", function($idproduct) {
 	$cart = Cart::getFromSession();
 
 	$cart->removeProduct($product, true);
-
-	$page = new Page();
 	
 	header("Location: /cart");
 	exit;
 
 });
 
+$app->post("/cart/freight", function() {
+
+	$cart = Cart::getFromSession();
+
+	$cart->setFreigth($_POST['zipcode']);
+
+	header("Location: /cart");
+	exit;
+})
 
 
  ?>
