@@ -69,7 +69,7 @@ class User extends Model
 	{
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
+		$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.deslogin = :LOGIN", array(
 			":LOGIN"=>$login
 		));
 
@@ -84,7 +84,7 @@ class User extends Model
 		{
 			$user = new User();
 
-			$date['desperson'] = utf8_encode($data['desperson']);
+			$data['desperson'] = utf8_encode($data['desperson']);
 
 			$user->setData($data);
 
@@ -320,6 +320,45 @@ class User extends Model
 		]);
 
 	} // end function getPasswordHash
+
+	public static function setErrorRegister($msg) 
+	{
+
+		$_SESSION[User::ERROR_REGISTER] = $msg;
+
+	} // end function setErrorRegister
+
+	public static function getErrorRegister() 
+	{
+
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '' ;
+
+		User::clearErrorRegister();
+
+		return $msg;
+
+	} // end function getErrorRegister
+
+	public static function clearErrorRegister() 
+	{
+
+		$_SESSION[User::ERROR_REGISTER] = NULL;
+
+	} // end function clearErrorRegister
+
+	public static function checkLoginExist($login) 
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [
+			':deslogin'=>$login
+		]);
+
+		return (count($results) > 0);
+
+	}
+
 
 } // End Class User - Model
 
