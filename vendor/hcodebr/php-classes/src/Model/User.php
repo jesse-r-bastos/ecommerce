@@ -314,10 +314,34 @@ class User extends Model
 	public static function clearError()
 	{
 
-		$_SESSION[User::ERROR] = NULL;
+		$_SESSION[User::SUCCESS] = NULL;
 
 	} // end function clearError
 
+	public static function setSuccess($msg)
+	{
+
+		$_SESSION[User::SUCCESS] = $msg;
+
+	} // end function setSUCCESS
+
+	public static function getSuccess()
+	{
+
+		$msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
+
+		User::clearError();
+
+		return $msg;
+
+	} // end function getSuccess
+
+	public static function clearSuccess()
+	{
+
+		$_SESSION[User::ERROR] = NULL;
+
+	} // end function clearSuccess
 
 	public static function getPasswordHash($password)
 	{
@@ -364,7 +388,7 @@ class User extends Model
 
 		return (count($results) > 0);
 
-	}
+	} // end function checkLoginExist
 
 
 } // End Class User - Model

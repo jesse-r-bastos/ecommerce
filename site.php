@@ -20,7 +20,7 @@ $app->get("/", function() {
 	]);
 
 });
-
+// ----- Rotas para Acessar Category      ---------------------[INICIO]
 $app->get("/categories/:idcategory", function($idcategory) {
 
 
@@ -49,7 +49,8 @@ $app->get("/categories/:idcategory", function($idcategory) {
 		'pages'=>$pages
 	]);
 });
-
+// Category ----------------------------------------------------[FINAL]
+// ----- Rotas para Acessar Produtos      ---------------------[INICIO]
 $app->get("/products/:desurl", function($desurl) {
 
 	$product = new Product();
@@ -64,7 +65,8 @@ $app->get("/products/:desurl", function($desurl) {
 	]);
 
 });
-
+// Products ----------------------------------------------------[FINAL]
+// ----- Rotas para Acessar Carrinho de Compras ---------------[INICIO]
 $app->get("/cart", function() {
 
 	$cart = Cart::getFromSession();
@@ -139,7 +141,8 @@ $app->post("/cart/freight", function() {
 	header("Location: /cart");
 	exit;
 });
-
+// Carts    ----------------------------------------------------[FINAL]
+// ----- Rotas para Acessar Finalizar Compras -----------------[INICIO]
 $app->get("/checkout", function() {
 
 	User::verifyLogin(false);
@@ -197,7 +200,8 @@ $app->get("/logout", function() {
 	exit;
 	
 });
-
+// Checkout    -------------------------------------------------[FINAL]
+// ----- Rotas para Registrar Usuários Clientes----------------[INICIO]
 $app->post("/register", function() {
 
 	$_SESSION['registerValues'] = $_POST;
@@ -249,9 +253,9 @@ $app->post("/register", function() {
 	exit;
 
 });
-
-// ----- Rotas para Redefinição de SENHA  ---------------------[INICIO]
-
+// Register    -------------------------------------------------[FINAL]
+// 
+// ----- Rotas para Redefinição de SENHA de Clientes ----------[INICIO]
 $app->get("/forgot", function() {
 
 	$page = new Page();
@@ -266,7 +270,6 @@ $app->post("/forgot", function(){
 
 	header("Location: /forgot/sent");
 	exit;
-
 });
 
 $app->get("/forgot/sent", function(){
@@ -276,7 +279,6 @@ $app->get("/forgot/sent", function(){
 	$page->setTpl("forgot-sent");	
 
 });
-
 
 $app->get("/forgot/reset", function(){
 
@@ -288,7 +290,6 @@ $app->get("/forgot/reset", function(){
 		"name"=>$user["desperson"],
 		"code"=>$_GET["code"]
 	));
-
 });
 
 $app->post("/forgot/reset", function(){
@@ -310,8 +311,71 @@ $app->post("/forgot/reset", function(){
 	$page->setTpl("forgot-reset-success");
 
 });  
+// Forgot      -------------------------------------------------[FINAL]
+// 
+// ----- Rotas para Profile do Usuário ------------------------[INICIO]
+$app->get("/profile", function() {
 
-// ----- Rotas para Redefinição de SENHA  ---------------------[FINAL]
+	User::verifyLogin(false);
+
+	$user = User::getFromSession();
+
+	$page = new Page();
+
+	$page->setTpl("profile", [
+		'user'=>$user->getValues(),
+		'profileMsg'=>User::getSuccess(),
+		'profileError'=>User::getError()
+	]);
+});
+
+$app->post("/profile", function() {
+
+	User::verifyLogin(false);
+
+	if (!isset($_POST['desperson']) || $_POST['desperson'] === '') {
+		
+		User::getRrror("Preencha o seu nome!");
+		header("Location: /profile");
+		exit;
+	}
+
+	if (!isset($_POST['desemail']) || $_POST['desemail'] === '') {
+
+		User::getRrror("Preencha o seu e-mail!");
+		header("Location: /profile");
+		exit;
+	}
+
+	$user = User::getFromSession();
+
+	if ($_POST['desemail'] !== $user->getdesemail()) {
+
+		if (User::checkLoginExist($_POST['desemail']) === true) {
+
+			User::setError("Este endereço de e-mail já está cadastrado!");
+			header("Location: /profile");
+			exit;
+		}
+
+	}
+
+	$_POST['inadmin'] = $user->getinadmin();
+	$_POST['despassword'] = $user->getdespassword();
+	$_POST['deslogin'] = $_POST['desemail'];
+
+	$user->setData($_POST);
+
+	$user->update();
+
+	User::setSuccess("Dados Alterados com sucesso!!");
+
+	header("Location: /profile");
+	exit;
+});
+// Profile     -------------------------------------------------[FINAL]
+// 
+
 
 ?>
 
