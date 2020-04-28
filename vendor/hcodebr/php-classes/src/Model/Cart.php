@@ -220,7 +220,7 @@ class Cart extends Model {
 				'nVlLargura'=>$totals['vlwidth'],			// Largura em cm
 				'nVlDiametro'=>'1',							// Diametro em cm
 				'sCdMaoPropria'=>'N',						// 'S/N' - Em mãos
-				'nVlValorDeclarado'=>$totals['vlprice'],	// Valor Declarado
+				'nVlValorDeclarado'=>'0',					// Valor Declarado
 				'sCdAvisoRecebimento'=>'S'					// 'S/N' - Aviso de recebimento				
 			]);
 
@@ -228,7 +228,7 @@ class Cart extends Model {
 
 			$result = $xml->Servicos->cServico; // Contém XML de Retorno dos CORREIOS com Cotação do Envio
 
-			if ($result->MsgErro != '') {
+			if ($result->MsgErro != '') {  //			var_dump($result->MsgErro);
 
 				Cart::setMsgError($result->MsgErro);
 
@@ -247,8 +247,6 @@ class Cart extends Model {
 			return $result;
 
 		} else {
-
-
 
 		}
 
