@@ -8,7 +8,7 @@ use \Hcode\Model\User;
 function formatPrice($vlprice) 
 {
 
-	if (is_null($vlprice)) return 0;
+	if (!$vlprice > 0 ) $vlprice = 0;
 
 	return number_format($vlprice, 2, ",", ".");
 
