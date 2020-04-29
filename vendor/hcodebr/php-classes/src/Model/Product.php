@@ -1,14 +1,14 @@
 <?php 
-
+/** 	
+ * Product - Controla Cadastro e Manutenção de produtos
+ */
 namespace Hcode\Model;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
 
-/** 	
- * Category
- */
+
 class Product extends Model
 {
 
@@ -49,9 +49,7 @@ class Product extends Model
 		}
 
 		return $list;
-
 	}
-
 
 	public function get($idproduct) 
 	{
@@ -103,16 +101,10 @@ class Product extends Model
 
 	} // end function Product::getValues
 
-
 	public function setPhoto($file) 
 	{
 		$extension = explode('.', $file['name']);
 		$extension = end($extension);
-/*
-		echo "product.php > : extension "; var_dump($extension); echo "<br>";
-		echo "product.php > : file ";var_dump($file); echo "<br>";
-		exit;
-*/
 
 		switch ($extension) {
 			case "jpg":
@@ -169,7 +161,6 @@ class Product extends Model
 			]);
 	}
 	
-
 } // End Class Product - Model
 
  ?>

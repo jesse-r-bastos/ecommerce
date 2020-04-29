@@ -1,14 +1,14 @@
 <?php 
-
+/** 	
+ * Cart - Carrinho de Compras 
+ */
 namespace Hcode\Model;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
 use \Hcode\Model\User;
-/** 	
- * Cart - Carrinho de Compras 
- */
+
 class Cart extends Model {
 
 	const SESSION = "Cart";

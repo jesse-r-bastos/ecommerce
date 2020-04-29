@@ -1,17 +1,15 @@
 <?php 
-
+/**
+ * Users - Cadastro e Manutenção de Usuários 
+ */
 namespace Hcode\Model;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
 
-/**
- * Users
- */
 class User extends Model
 {
-
 	const SESSION = "User";
 	const SECRET = "HcodePhp7_Secret";
 	const SECRET_IV = "HcodePhp7_Secret_IV";
@@ -98,7 +96,6 @@ class User extends Model
 
 	} // end function Login
 
-
 	public static function verifyLogin($inadmin = true) 
 	{
 
@@ -142,7 +139,6 @@ class User extends Model
 		$this->setData($results[0]);
 
 	} // end function save
-
 
 	public function get($iduser) 
 	{
@@ -238,9 +234,7 @@ class User extends Model
 				$mailer->send();
 
 				return $data;
-
 			}
-
 		}
 	} // end function delete
 

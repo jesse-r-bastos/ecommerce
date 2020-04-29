@@ -8,7 +8,10 @@ use \Hcode\Model\Product;
 use \Hcode\Model\Cart;
 use \Hcode\Model\Address;
 use \Hcode\Model\User;
+use \Hcode\Model\Order;
+use \Hcode\Model\OrderStatus;
 
+// ----- Rotas Principal                  ---------------------[INICIO]
 $app->get("/", function() {
 
 	$products = Product::listAll();
@@ -20,7 +23,9 @@ $app->get("/", function() {
 	]);
 
 });
+// 
 // ----- Rotas para Acessar Category      ---------------------[INICIO]
+//
 $app->get("/categories/:idcategory", function($idcategory) {
 
 
@@ -50,7 +55,9 @@ $app->get("/categories/:idcategory", function($idcategory) {
 	]);
 });
 // Category ----------------------------------------------------[FINAL]
+// 
 // ----- Rotas para Acessar Produtos      ---------------------[INICIO]
+//
 $app->get("/products/:desurl", function($desurl) {
 
 	$product = new Product();
@@ -66,7 +73,9 @@ $app->get("/products/:desurl", function($desurl) {
 
 });
 // Products ----------------------------------------------------[FINAL]
+// 
 // ----- Rotas para Acessar Carrinho de Compras ---------------[INICIO]
+//
 $app->get("/cart", function() {
 
 	$cart = Cart::getFromSession();
@@ -142,7 +151,9 @@ $app->post("/cart/freight", function() {
 	exit;
 });
 // Carts    ----------------------------------------------------[FINAL]
+// 
 // ----- Rotas para Acessar Finalizar Compras -----------------[INICIO]
+//
 $app->get("/checkout", function() {
 
 	User::verifyLogin(false);
@@ -154,12 +165,10 @@ $app->get("/checkout", function() {
 
 		$_GET['zipcode'] = $cart->getdeszipcode();
 	}
-
 	if (isset($_GET['zipcode'])) {
 
 		$_GET['zipcode'] =  $cart->getdeszipcode();
 	}
-
 	if (isset($_GET['zipcode'])) {
 
 		$address->loadFromCEP($_GET['zipcode']);
@@ -171,8 +180,6 @@ $app->get("/checkout", function() {
 		$cart->getCalculateTotal();
 	}
 
-echo "GET after>>>";var_dump($address);
-
 	if (!$address->getdesaddress()) $address->setdesaddress('');
 	if (!$address->getdescomplement()) $address->setdescomplement('');
 	if (!$address->getdesdistrict()) $address->setdesdistrict('');
@@ -180,8 +187,6 @@ echo "GET after>>>";var_dump($address);
 	if (!$address->getdesstate()) $address->setdesstate('');
 	if (!$address->getdescountry()) $address->setdescountry('');
 	if (!$address->getdeszipcode()) $address->setdeszipcode('');
-
-echo "<br>GET before>>>";var_dump($address);
 
 	$page = new Page();
 	
@@ -202,31 +207,26 @@ $app->post("/checkout", function() {
 		header('Location: /checkout');
 		exit;
 	}
-
 	if (!isset($_POST['desaddress']) || $_POST['desaddress'] === '') {
 		Address::setMsgError("Informe o Endereço.");
 		header('Location: /checkout');
 		exit;
 	}
-
 	if (!isset($_POST['desdistrict']) || $_POST['desdistrict'] === '') {
 		Address::setMsgError("Informe o Bairro.");
 		header('Location: /checkout');
 		exit;
 	}
-
 	if (!isset($_POST['descity']) || $_POST['descity'] === '') {
 		Address::setMsgError("Informe a Cidade.");
 		header('Location: /checkout');
 		exit;
 	}
-
 	if (!isset($_POST['desstate']) || $_POST['desstate'] === '') {
 		Address::setMsgError("Informe o Estado.");
 		header('Location: /checkout');
 		exit;
 	}
-
 	if (!isset($_POST['descountry']) || $_POST['descountry'] === '') {
 		Address::setMsgError("Informe o País.");
 		header('Location: /checkout');
@@ -241,15 +241,120 @@ $app->post("/checkout", function() {
 	$_POST['idperson'] = $user->getidperson();
 
 	$address->setData($_POST);
-
 	$address->save();
 
-	header("Location: /order");
-	exit;
+	$cart = Cart::getFromSession();
 
+	$cart->getCalculateTotal();
+
+	$order = new Order();
+	$order->setData([ 
+		'idcart'=>$cart->getidcart(),
+		'idaddress'=>$address->getidaddress(),
+		'iduser'=>$user->getiduser(),
+		'idstatus'=>OrderStatus::EM_ABERTO,
+		'vltotal'=>$cart->getvltotal()
+	]);
+
+	$order->save();
+
+	header("Location: /order/".$order->getidorder());
+	exit;
+});
+// Checkout    -------------------------------------------------[FINAL]
+// 
+// ----- Rotas para Finalização do Pedido- Order / Boleto -----[INICIO]
+//
+$app->get("/order/:idorder", function($idorder) {
+
+	User::verifyLogin(false);
+
+	$order = new Order;
+
+	$order->get((int)$idorder);
+
+
+	$page = new Page();
+
+	$page->setTpl("payment", [
+		'order'=>$order->getValues()
+	]);
 
 });
 
+$app->get("/boleto/:idorder", function($idorder) {
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+
+	$order->get((int)$idorder);
+
+	// DADOS DO BOLETO PARA O SEU CLIENTE
+	$dias_de_prazo_para_pagamento = 10;
+	$taxa_boleto = 5.00;
+	$data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
+	$valor_cobrado = $order->getvltotal(); // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
+	$valor_cobrado = str_replace(",", ".",$valor_cobrado);
+	$valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+
+	$dadosboleto["nosso_numero"] = $order->getidorder();  // Nosso numero - REGRA: Máximo de 8 caracteres!
+	$dadosboleto["numero_documento"] = $order->getidorder();	// Num do pedido ou nosso numero
+	$dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
+	$dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
+	$dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
+	$dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
+
+	// DADOS DO SEU CLIENTE
+	$dadosboleto["sacado"] = $order->getdesperson();
+	$dadosboleto["endereco1"] = $order->getidaddress()." ".$order->getdesdistrict() ;
+	$dadosboleto["endereco2"] = $order->getdescity()." - ".$order->getdesstate()." - ".$order->getdescountry()." - CEP: ".$order->getzipcode();
+
+	// INFORMACOES PARA O CLIENTE
+	$dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Hcode E-commerce";
+	$dadosboleto["demonstrativo2"] = "Taxa bancária - R$ 0,00";
+	$dadosboleto["demonstrativo3"] = "";
+	$dadosboleto["instrucoes1"] = "- Sr. Caixa, cobrar multa de 2% após o vencimento";
+	$dadosboleto["instrucoes2"] = "- Receber até 10 dias após o vencimento";
+	$dadosboleto["instrucoes3"] = "- Em caso de dúvidas entre em contato conosco: suporte@hcode.com.br";
+	$dadosboleto["instrucoes4"] = "&nbsp; Emitido pelo sistema Projeto Loja Hcode E-commerce - www.hcode.com.br";
+
+	// DADOS OPCIONAIS DE ACORDO COM O BANCO OU CLIENTE
+	$dadosboleto["quantidade"] = "";
+	$dadosboleto["valor_unitario"] = "";
+	$dadosboleto["aceite"] = "";		
+	$dadosboleto["especie"] = "R$";
+	$dadosboleto["especie_doc"] = "";
+
+
+	// ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
+
+
+	// DADOS DA SUA CONTA - ITAÚ
+	$dadosboleto["agencia"] = "1690"; // Num da agencia, sem digito
+	$dadosboleto["conta"] = "48781";	// Num da conta, sem digito
+	$dadosboleto["conta_dv"] = "2"; 	// Digito do Num da conta
+
+	// DADOS PERSONALIZADOS - ITAÚ
+	$dadosboleto["carteira"] = "175";  // Código da Carteira: pode ser 175, 174, 104, 109, 178, ou 157
+
+	// SEUS DADOS
+	$dadosboleto["identificacao"] = "Hcode Treinamentos";
+	$dadosboleto["cpf_cnpj"] = "24.700.731/0001-08";
+	$dadosboleto["endereco"] = "Rua Ademar Saraiva Leão, 234 - Alvarenga, 09853-120";
+	$dadosboleto["cidade_uf"] = "São Bernardo do Campo - SP";
+	$dadosboleto["cedente"] = "HCODE TREINAMENTOS LTDA - ME";
+
+	// NÃO ALTERAR!
+	$path = $_SERVER['DOCUMENT_ROOT']. DIRECTORY_SEPARATOR .'res'. DIRECTORY_SEPARATOR .'boletophp'. DIRECTORY_SEPARATOR .'include'. DIRECTORY_SEPARATOR;
+	require_once($path . "funcoes_itau.php");
+	require_once($path . "layout_itau.php");
+
+});
+// Order / Boleto ----------------------------------------------[FINAL]
+// 
+// ----- Rotas para Login e Logout  ---------------------------[INICIO]
+//
 $app->get("/login", function() {
 
 	$page = new Page();
@@ -262,26 +367,21 @@ $app->get("/login", function() {
 			'email'=>'',
 			'phone'=>''																									]
 	]);
-
 });
 
 $app->post("/login", function() {
 
 	try {
+			User::login($_POST['login'], $_POST['password']);
 
-		User::login($_POST['login'], $_POST['password']);
-		
 	} catch (Exception $e) {
 
-		User::setError($e->getMessage());
-		
+			User::setError($e->getMessage());		
 	}
 
 	header("Location: /checkout");
 	exit;
-	
 });
-
 
 $app->get("/logout", function() {
 
@@ -289,10 +389,11 @@ $app->get("/logout", function() {
 
 	header("Location: /login");
 	exit;
-	
 });
-// Checkout    -------------------------------------------------[FINAL]
+// Login e Logout ----------------------------------------------[FINAL]
+// 
 // ----- Rotas para Registrar Usuários Clientes----------------[INICIO]
+//
 $app->post("/register", function() {
 
 	$_SESSION['registerValues'] = $_POST;
@@ -303,21 +404,18 @@ $app->post("/register", function() {
 		header("Location: /login");
 		exit;
 	}
-
 	if (!isset($_POST['email']) || $_POST['email'] == '' ) {
 
 		User::setErrorRegister("Preencha seu email!");
 		header("Location: /login");
 		exit;
 	}	
-
 	if (!isset($_POST['password']) || $_POST['password'] == '' ) {
 
 		User::setErrorRegister("Preencha sua Senha!");
 		header("Location: /login");
 		exit;
 	}	
-
 	if (User::checkLoginExist($_POST['email']) === true) {
 
 		User::setErrorRegister("Este endereço de e-mail já está sendo usado por outro usuário!");
@@ -326,7 +424,6 @@ $app->post("/register", function() {
 	}
 
 	$user = new User();
-
 	$user->setData([
 		'inadmin'=>0,
 		'deslogin'=>$_POST['email'],
@@ -342,17 +439,16 @@ $app->post("/register", function() {
 
 	header("Location: /checkout");
 	exit;
-
 });
 // Register    -------------------------------------------------[FINAL]
 // 
 // ----- Rotas para Redefinição de SENHA de Clientes ----------[INICIO]
+//
 $app->get("/forgot", function() {
 
 	$page = new Page();
 
 	$page->setTpl("forgot");	
-
 });
 
 $app->post("/forgot", function(){
@@ -368,7 +464,6 @@ $app->get("/forgot/sent", function(){
 	$page = new Page();
 
 	$page->setTpl("forgot-sent");	
-
 });
 
 $app->get("/forgot/reset", function(){
@@ -400,11 +495,11 @@ $app->post("/forgot/reset", function(){
 	$page = new Page();
 
 	$page->setTpl("forgot-reset-success");
-
 });  
 // Forgot      -------------------------------------------------[FINAL]
 // 
 // ----- Rotas para Profile do Usuário ------------------------[INICIO]
+//
 $app->get("/profile", function() {
 
 	User::verifyLogin(false);
@@ -430,7 +525,6 @@ $app->post("/profile", function() {
 		header("Location: /profile");
 		exit;
 	}
-
 	if (!isset($_POST['desemail']) || $_POST['desemail'] === '') {
 
 		User::getRrror("Preencha o seu e-mail!");
@@ -466,6 +560,7 @@ $app->post("/profile", function() {
 });
 // Profile     -------------------------------------------------[FINAL]
 // 
+
 
 
 ?>

@@ -1,5 +1,7 @@
 <?php 
-
+/** 	
+ * Sql - Acesso ao Banco de Dados ecommerce using PDO + fu~ções básicas
+ */
 namespace Hcode\DB;
 
 class Sql {

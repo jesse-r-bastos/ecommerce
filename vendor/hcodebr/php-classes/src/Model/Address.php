@@ -1,12 +1,12 @@
 <?php 
-
+/** 	
+ * Address - Busca CEP e Controla Dados de Endereço so Cliente
+ */
 namespace Hcode\Model;
 
 use \Hcode\DB\Sql;
 use \Hcode\Model;
-/** 	
- * Address - Busca CEP e Controla Dados de Endereço so Cliente
- */
+
 class Address extends Model {
 
 	Const SESSION_ERROR = "AddressError";
@@ -97,7 +97,7 @@ class Address extends Model {
 	}
 	
 
-} // End Class Category - Model
+} // End Class Address - Model
 
 
  ?>
