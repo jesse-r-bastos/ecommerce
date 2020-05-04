@@ -79,7 +79,11 @@ $app->get("/products/:desurl", function($desurl) {
 $app->get("/cart", function() {
 
 	$cart = Cart::getFromSession();
-
+/*
+	if (!$cart->getddeszipcode()) $cart->setdeszipcode('0');
+	if (!$cart->getdvlfreight()) $cart->setvlfreight('0');
+	if (!$cart->getdnrdays()) $cart->setnrdays('0');
+*/
 	$page = new Page(); 
 
 	$page->setTpl("cart", [
@@ -152,11 +156,13 @@ $app->post("/cart/freight", function() {
 });
 // Carts    ----------------------------------------------------[FINAL]
 // 
-// ----- Rotas para Acessar Finalizar Compras -----------------[INICIO]
+// -GET- Rotas para Acessar Finalizar Compras -----------------[INICIO]
 //
 $app->get("/checkout", function() {
 
 	User::verifyLogin(false);
+
+	echo "checkout  GET <br>";
 
 	$address = new Address();	
 	$cart = Cart::getFromSession();
@@ -197,10 +203,12 @@ $app->get("/checkout", function() {
 		'error'=>Address::getMsgError()
 	]);
 });
-
+// -POST-
 $app->post("/checkout", function() {
 
 	User::verifyLogin(false);
+
+	echo "checkout  POST <br>"; 
 
 	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
 		Address::setMsgError("Informe o CEP.");
@@ -237,10 +245,13 @@ $app->post("/checkout", function() {
 
 	$address = new Address();
 
-	$_POST['deszipcode'] = $_POST['zipcode'];
+	$_POST['nrzipcode'] = $_POST['zipcode'];
 	$_POST['idperson'] = $user->getidperson();
 
 	$address->setData($_POST);
+
+
+
 	$address->save();
 
 	$cart = Cart::getFromSession();
@@ -248,6 +259,7 @@ $app->post("/checkout", function() {
 	$cart->getCalculateTotal();
 
 	$order = new Order();
+
 	$order->setData([ 
 		'idcart'=>$cart->getidcart(),
 		'idaddress'=>$address->getidaddress(),
@@ -256,9 +268,14 @@ $app->post("/checkout", function() {
 		'vltotal'=>$cart->getvltotal()
 	]);
 
+//	echo "<br>checkout after order save.<br>";  echo var_dump($order);
+
 	$order->save();
 
-	header("Location: /order/".$order->getidorder());
+//	echo "<br>checkout  POST >> after order save. Order: ".var_dump($order)." <br>"; exit;
+
+
+	header("Location: /order/".$order->getidorder());	
 	exit;
 });
 // Checkout    -------------------------------------------------[FINAL]
@@ -352,6 +369,44 @@ $app->get("/boleto/:idorder", function($idorder) {
 
 });
 // Order / Boleto ----------------------------------------------[FINAL]
+// 
+// ----- Rotas para Orders - Profile --------------------------[INICIO]
+$app->get("/profile/orders", function() {
+
+	User::verifyLogin(false);
+
+	$page = new Page();
+
+	$user = User::getFromSession();
+
+	$page->setTpl("profile-orders", [
+		'orders'=>$user->getOrders()
+	]);
+
+});
+
+$app->get("/profile/orders/:idorder", function($idorder) {
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+
+	$order->get((int)$idorder);
+
+	$cart = new Cart();
+
+	$cart->get((int)$order->getidcart());
+
+	$page = new Page();
+
+	$page->setTpl("profile-orders-detail", [
+		'order'=>$order->getValues(),
+		'cart'=>$cart->getValues(),
+		'products'=>$cart->getProducts()
+	]);
+
+});
+// Orders - Profile --------------------------------------------[FINAL]
 // 
 // ----- Rotas para Login e Logout  ---------------------------[INICIO]
 //

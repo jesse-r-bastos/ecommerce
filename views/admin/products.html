@@ -33,22 +33,21 @@
                     <th>Altura</th>
                     <th>Comprimento</th>
                     <th>Peso</th>
-                    <th style="width: 50px;">&nbsp;</th>
-                    <th >______Atualização______</th>    
-
+                    <th style="width: 10px;">&nbsp;</th>
+                    <th  style="text-align: right;">____Atualização___</th>    
                   </tr>
                 </thead>
                 <tbody>
                   {loop="$products"}
-                  <tr>
+                  <tr style="text-align: right;">
                     <td>{$value.idproduct}</td>
-                    <td>{$value.desproduct}</td>
+                    <td style="text-align: left;">{$value.desproduct}</td>
                     <td>{function="formatPrice($value.vlprice)"}</td>
                     <td>{function="formatPrice($value.vlwidth)"}</td>
                     <td>{function="formatPrice($value.vlheight)"}</td>
                     <td>{function="formatPrice($value.vllength)"}</td>
                     <td>{function="formatPrice($value.vlweight)"}</td>
-                    <td style="width: 50px;">&nbsp;</td>        
+                    <td style="width: 10px;">&nbsp;</td>        
                     <td>
                       <a href="/admin/products/{$value.idproduct}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
                       <a href="/admin/products/{$value.idproduct}/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>

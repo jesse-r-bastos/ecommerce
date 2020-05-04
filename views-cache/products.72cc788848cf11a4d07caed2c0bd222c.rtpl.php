@@ -33,23 +33,22 @@
                     <th>Altura</th>
                     <th>Comprimento</th>
                     <th>Peso</th>
-                    <th style="width: 50px;">&nbsp;</th>
-                    <th >______Atualização______</th>    
-
+                    <th style="width: 10px;">&nbsp;</th>
+                    <th  style="text-align: right;">____Atualização___</th>    
                   </tr>
                 </thead>
                 <tbody>
                   <?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
 
-                  <tr>
+                  <tr style="text-align: right;">
                     <td><?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
-                    <td><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
+                    <td style="text-align: left;"><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>
                     <td><?php echo formatPrice($value1["vlprice"]); ?></td>
                     <td><?php echo formatPrice($value1["vlwidth"]); ?></td>
                     <td><?php echo formatPrice($value1["vlheight"]); ?></td>
                     <td><?php echo formatPrice($value1["vllength"]); ?></td>
                     <td><?php echo formatPrice($value1["vlweight"]); ?></td>
-                    <td style="width: 50px;">&nbsp;</td>        
+                    <td style="width: 10px;">&nbsp;</td>        
                     <td>
                       <a href="/admin/products/<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Editar</a>
                       <a href="/admin/products/<?php echo htmlspecialchars( $value1["idproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?>/delete" onclick="return confirm('Deseja realmente excluir este registro?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Excluir</a>

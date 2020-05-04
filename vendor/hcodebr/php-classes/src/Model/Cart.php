@@ -19,13 +19,21 @@ class Cart extends Model {
 
 		$cart = new Cart();
 
+		//echo "<br>".'after getFromSessionID: ';var_dump($_SESSION); 
+
 		if (isset($_SESSION[Cart::SESSION]) && (int)$_SESSION[Cart::SESSION]['idcart'] > 0) {
 
+			//echo "<br>".'after getFromSessionID no Save: ';var_dump($_SESSION[Cart::SESSION]['idcart']); 
+
 			$cart->get((int)$_SESSION[Cart::SESSION]['idcart']);
+
+			//echo "<br>".'after get in getFromSessionID : ';var_dump($cart); 
 
 		} else {
 
 			$cart->getFromSessionID();
+
+			//echo "<br>".'before getFromSessionID after Save: ';var_dump($cart); 
 
 			if (!(int)$cart->getidcart() > 0) {
 
@@ -68,9 +76,11 @@ class Cart extends Model {
 
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT * FROM tb_carts WHERE dessessionid = :dessessionid", [
+		$results = $sql->select("SELECT * FROM tb_carts WHERE dessessionid = :dessessionid ;", [
 			':dessessionid'=>session_id()
 		]);
+
+		//echo 'Save after select: ';var_dump($results); exit;
 
 		if (count($results) > 0) {
 
@@ -78,7 +88,7 @@ class Cart extends Model {
 
 		}
 
-	}	
+	}
 
 	public function get(int $idcart)
 	{
@@ -89,6 +99,9 @@ class Cart extends Model {
 			':idcart'=>$idcart
 		]);
 
+
+		//echo "<br>"."function get results>idcart=$idcart  " ;var_dump($results); 
+
 		if (count($results) > 0) {
 
 			$this->setData($results[0]);
@@ -96,6 +109,7 @@ class Cart extends Model {
 		}
 
 	}
+
 
 	public function save()
 	{
@@ -208,23 +222,26 @@ class Cart extends Model {
 			// Regras específicas para 'nCdServico'=>'41106'
 			if ($totals['vlheight'] < 2) $totals['vlheight'] = 2;
 			if ($totals['vllength'] < 16) $totals['vllength'] = 16;
+			if ($totals['vlweight'] < 1) $totals['vlweight'] = 1;
+			if ($totals['vlwidth'] < 10) $totals['vlwidth'] = 10;
+
 
 			$qs = http_build_query([
 				'nCdEmpresa'=>'',							// Não Obrig.
 				'sDsSenha'=>'',							   	// Não Obrig.
-				'nCdServico'=>'41106',		 			  	// Varejo 
+				'nCdServico'=>'40010',		 			  	// Varejo 
 				'sCepOrigem'=>'09853120',    		    	// CEP da HCODE ex.
 				'sCepDestino'=>$nrzipcode,			   		// CEP destino ex.
 				'nVlPeso'=>$totals['vlweight'],				// Peso Total
 				'nCdFormato'=>'1',							// Formato: 1=Caixa , 2=Rolo ou 3=Envelope
 				'nVlComprimento'=>$totals['vllength'],		// Comprimento em cm
 				'nVlAltura'=>$totals['vlheight'],			// Altura em cm
-				'nVlLargura'=>$totals['vlwidth'],			// Largura em cm
+				'nVlLargura'=>$totals['vlwidth'] + 0,		// Largura em cm
 				'nVlDiametro'=>'1',							// Diametro em cm
 				'sCdMaoPropria'=>'N',						// 'S/N' - Em mãos
 				'nVlValorDeclarado'=>'0',					// Valor Declarado
 				'sCdAvisoRecebimento'=>'S'					// 'S/N' - Aviso de recebimento				
-			]);
+			]);  //			echo json_encode($qs);
 
 			$xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs);
 

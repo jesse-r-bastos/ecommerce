@@ -49,6 +49,11 @@
 
                                         <td class="product-name">
                                             <a href="/products/<?php echo htmlspecialchars( $value1["desurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a> 
+                                            <h6> Comprimento: <?php echo htmlspecialchars( $value1["vllength"], ENT_COMPAT, 'UTF-8', FALSE ); ?> -
+                                                Largura: <?php echo htmlspecialchars( $value1["vlwidth"], ENT_COMPAT, 'UTF-8', FALSE ); ?> -
+                                                Altura: <?php echo htmlspecialchars( $value1["vlheight"], ENT_COMPAT, 'UTF-8', FALSE ); ?> -
+                                                Peso: <?php echo htmlspecialchars( $value1["vlweight"], ENT_COMPAT, 'UTF-8', FALSE ); ?>
+                                            </h6>
                                         </td>
 
                                         <td class="product-price">
@@ -86,13 +91,16 @@
                                     <h5>Detalhes do Frete </h5>
                                     
                                     <p class="shipping" style="font-size: 8px;" >
-                                        "Codigo":"40010"<br> 
-                                        "ValorMaoPropria":"0,00"<br>
-                                        "ValorAvisoRecebimento":"0,00"<br>
-                                        "ValorValorDeclarado":"0,00"<br>
-                                        "EntregaDomiciliar":{},<br>
-                                        "EntregaSabado":{},<br>
-                                        "ValorSemAdicionais":"0,00"
+                                        "Codigo":"40010" <br> 
+                                        'sCepOrigem'=>'09853120' <br> 
+                                        'sCepDestino'=><?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <br> 
+
+                                        'ValorMaoPropria=0,00' <br>
+                                        'ValorAvisoRecebimento=0,00' <br>
+                                        'ValorValorDeclarado:0,00' <br>
+                                        'EntregaDomiciliar:N'<br>
+                                        'EntregaSabado:N' <br>
+                                        'ValorSemAdicionais:0,00'
                                     </p>
                                     
                                     </div>

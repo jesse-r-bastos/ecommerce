@@ -42,7 +42,7 @@ class Address extends Model {
 			$this->setdescity($data['localidade']);
 			$this->setdesstate($data['uf']);
 			$this->setdescountry('Brasil');
-			$this->setdeszipcode($nrcep);
+			$this->setnrzipcode($nrcep);
 		}
 
 	}
@@ -50,20 +50,36 @@ class Address extends Model {
 	public function save() 
 	{
 		$sql = new Sql();
+		
+		$idAddress = $this->getidaddress();
 
+//echo '<br> -------Address::save ----------'; /echo '<br>:idaddress=>' ; var_dump($idAddress);
 
-
-		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
-			':idaddress'=>$this->getidaddress(),
+		if ( is_null($idAddress) ) $idAddress = 0 ; var_dump($idAddress);
+/*
+	echo '<br>:idaddress=>'.$idAddress;
+	echo '<br>:idperson=>'.$this->getidperson();
+	echo '<br>:desaddress=>'.utf8_decode($this->getdesaddress());
+	echo '<br>:descomplement=>'.utf8_decode($this->getdescomplement());
+	echo '<br>:descity=>'.utf8_decode($this->getdescity());
+	echo '<br>:desstate=>'.utf8_decode($this->getdesstate());
+	echo '<br>:descountry=>'.utf8_decode($this->getdescountry());
+	echo '<br>:nrzipcode=>'.$this->getnrzipcode();
+	echo '<br>:desdistrict=>'.$this->getdesdistrict();
+*/
+		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :descomplement, :descity, :desstate, :descountry, :nrzipcode, :desdistrict)", [
+			':idaddress'=>$idAddress,
 			':idperson'=>$this->getidperson(),
 			':desaddress'=>utf8_decode($this->getdesaddress()),
 			':descomplement'=>utf8_decode($this->getdescomplement()),
 			':descity'=>utf8_decode($this->getdescity()),
 			':desstate'=>utf8_decode($this->getdesstate()),
 			':descountry'=>utf8_decode($this->getdescountry()),
-			':deszipcode'=>$this->getdeszipcode(),
+			':nrzipcode'=>$this->getnrzipcode(),
 			':desdistrict'=>$this->getdesdistrict()
-		]);
+		]);  
+
+//echo "<br> checkout >> save.<br>"; echo var_dump($results); 
 
 		if (count($results) > 0) {
 			$this->setData($results[0]);
