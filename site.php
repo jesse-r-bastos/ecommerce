@@ -332,9 +332,7 @@ $app->get("/boleto/:idorder", function($idorder) {
 	$dadosboleto["especie"] = "R$";
 	$dadosboleto["especie_doc"] = "";
 
-
 	// ---------------------- DADOS FIXOS DE CONFIGURAÇÃO DO SEU BOLETO --------------- //
-
 
 	// DADOS DA SUA CONTA - ITAÚ
 	$dadosboleto["agencia"] = "1690"; // Num da agencia, sem digito
@@ -604,8 +602,78 @@ $app->post("/profile", function() {
 });
 // Profile     -------------------------------------------------[FINAL]
 // 
+// ----- Rotas para Redefinição de SENHA de Clientes ----------[INICIO]
+//
+$app->get("/profile/change-password", function() {
+
+	User::verifyLogin(false);
+
+	$page = new Page();
+
+	$page->setTpl("Location: /profile-change-password", [
+			'changePassError'=>User::getError(),
+			'changePassSuccess'=>User::getSuccess()
+	]);
+	exit;
+});
+
+$app->post("/profile/change-password", function() {
+
+	User::verifyLogin(false);
+
+	User::setError("");
+
+	if (!isset($_POST['current_pass']) || $_POST['current_pass'] === '' ) {
+		User::setError("Digite a senha ATUAL.");
+		header("Location: /profile/change-password");
+		exit;
+	}
+
+	if (!isset($_POST['new_pass']) || $_POST['new_pass'] === '' ) {
+		User::setError("Digite a NOVA senha.");
+		header("Location: /profile/change-password");
+		exit;
+	}
+
+	if (!isset($_POST['new_pass_confirm']) || $_POST['new_pass_confirm'] === '' ) {
+		User::setError("CONFIRME a nova senha.");
+		header("Location: /profile/change-password");
+		exit;
+	}
+/*
+	if ($_POST['new_pass'] !== $_POST['new_pass_confirm']) {
+		User::setError("Senha de confirmação é diferente da NOVA senha informada.");
+		header("Location: /profile/change-password");
+		exit;
+	}
+*/
+	if ($_POST['current_pass'] === $_POST['new_pass']) {
+		User::setError("Sua NOVA senha deve ser diferente da senha ATUAL.");
+		header("Location: /profile/change-password");
+		exit;
+	}
+
+	$user = User::getFromSession();
+
+	if (!password_verify($_POST['current_pass'], $user->getdespassword())) {
+		User::setError("Senha ATUAL inválida.");
+		header("Location: /profile/change-password");
+		exit;
+	}
+
+	$user->setdespassword($_POST['new_pass']);
+
+	$user->update();
+
+	User::setSuccess("Senha alterada com sucesso!");
+
+	header("Location: /profile/change-password");
+	exit;
+});
 
 
+// SENHA       -------------------------------------------------[FINAL]
+// 
 
 ?>
 
