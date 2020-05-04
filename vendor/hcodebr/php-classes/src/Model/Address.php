@@ -53,20 +53,8 @@ class Address extends Model {
 		
 		$idAddress = $this->getidaddress();
 
-//echo '<br> -------Address::save ----------'; /echo '<br>:idaddress=>' ; var_dump($idAddress);
-
 		if ( is_null($idAddress) ) $idAddress = 0 ; var_dump($idAddress);
-/*
-	echo '<br>:idaddress=>'.$idAddress;
-	echo '<br>:idperson=>'.$this->getidperson();
-	echo '<br>:desaddress=>'.utf8_decode($this->getdesaddress());
-	echo '<br>:descomplement=>'.utf8_decode($this->getdescomplement());
-	echo '<br>:descity=>'.utf8_decode($this->getdescity());
-	echo '<br>:desstate=>'.utf8_decode($this->getdesstate());
-	echo '<br>:descountry=>'.utf8_decode($this->getdescountry());
-	echo '<br>:nrzipcode=>'.$this->getnrzipcode();
-	echo '<br>:desdistrict=>'.$this->getdesdistrict();
-*/
+
 		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :descomplement, :descity, :desstate, :descountry, :nrzipcode, :desdistrict)", [
 			':idaddress'=>$idAddress,
 			':idperson'=>$this->getidperson(),
@@ -78,8 +66,6 @@ class Address extends Model {
 			':nrzipcode'=>$this->getnrzipcode(),
 			':desdistrict'=>$this->getdesdistrict()
 		]);  
-
-//echo "<br> checkout >> save.<br>"; echo var_dump($results); 
 
 		if (count($results) > 0) {
 			$this->setData($results[0]);
@@ -111,7 +97,6 @@ class Address extends Model {
 		$_SESSION[Address::SESSION_ERROR] = NULL;
 
 	}
-	
 
 } // End Class Address - Model
 

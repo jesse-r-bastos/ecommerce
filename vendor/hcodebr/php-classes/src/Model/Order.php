@@ -13,21 +13,10 @@ class Order extends Model {
 	{
 		$sql = new Sql();
 
-echo '<br> -------Order::save ----------'; 
-
 		$idOrder = $this->getidorder();
 
-//echo '<br> -------Address::save ----------'; /echo '<br>:idaddress=>' ; var_dump($idAddress);
-
 		if ( is_null($idOrder) ) $idOrder = 0 ; var_dump($idOrder);
-/*
-echo '<br>:idorder=>'.$idOrder;
-echo '<br>:idcart=>'.$this->getidcart();
-echo '<br>:iduser=>'.$this->getiduser();
-echo '<br>:idstatus=>'.$this->getidstatus();
-echo '<br>:idaddress=>'.$this->getidaddress();
-echo '<br>:vltotal=>'.$this->getvltotal();
-*/
+
 		$results = $sql->select("CALL sp_orders_save ( :idorder, :idcart, :iduser, :idstatus, :idaddress, :vltotal )", [
 									':idorder'=>$idOrder,
 									':idcart'=>$this->getidcart(),
@@ -43,7 +32,6 @@ echo '<br>:vltotal=>'.$this->getvltotal();
 		}
 
 	}
-
 
 	public function get($idorder) 
 	{
@@ -65,8 +53,6 @@ echo '<br>:vltotal=>'.$this->getvltotal();
 		}
 
 	}
-
-
 
 } // End Class Order - Model
 

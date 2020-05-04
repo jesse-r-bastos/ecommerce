@@ -25,7 +25,7 @@ function getUserName() {
 
 	$user = User::getFromSession();
 
-	return $user->getdeslogin();
+	return $user->getdesperson();
 
 }
 
@@ -33,17 +33,21 @@ function getCartNrQdt() {
 
 	$cart = Cart::getFromSession();
 
-	$totals = $cart->getProductstotal();
+	$totals = $cart->getProductsTotals();
+
+	if ($totals  === NULL ) $totals['nrqtd'] = 0 ;
 
 	return $totals['nrqtd'];
 
 }
 
-function getCartvlSubTotal() {
+function getCartVlSubTotal() {
 
 	$cart = Cart::getFromSession();
 
-	$totals = $cart->getProductstotal();
+	$totals = $cart->getProductsTotals();
+
+	if ($totals  === NULL ) $totals['vlprice'] = 0 ;
 
 	return formatPrice($totals['vlprice']);
 

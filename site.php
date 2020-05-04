@@ -162,8 +162,6 @@ $app->get("/checkout", function() {
 
 	User::verifyLogin(false);
 
-	echo "checkout  GET <br>";
-
 	$address = new Address();	
 	$cart = Cart::getFromSession();
 
@@ -208,8 +206,6 @@ $app->post("/checkout", function() {
 
 	User::verifyLogin(false);
 
-	echo "checkout  POST <br>"; 
-
 	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
 		Address::setMsgError("Informe o CEP.");
 		header('Location: /checkout');
@@ -250,8 +246,6 @@ $app->post("/checkout", function() {
 
 	$address->setData($_POST);
 
-
-
 	$address->save();
 
 	$cart = Cart::getFromSession();
@@ -268,12 +262,7 @@ $app->post("/checkout", function() {
 		'vltotal'=>$cart->getvltotal()
 	]);
 
-//	echo "<br>checkout after order save.<br>";  echo var_dump($order);
-
 	$order->save();
-
-//	echo "<br>checkout  POST >> after order save. Order: ".var_dump($order)." <br>"; exit;
-
 
 	header("Location: /order/".$order->getidorder());	
 	exit;

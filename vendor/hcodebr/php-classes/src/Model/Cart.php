@@ -19,21 +19,13 @@ class Cart extends Model {
 
 		$cart = new Cart();
 
-		//echo "<br>".'after getFromSessionID: ';var_dump($_SESSION); 
-
 		if (isset($_SESSION[Cart::SESSION]) && (int)$_SESSION[Cart::SESSION]['idcart'] > 0) {
 
-			//echo "<br>".'after getFromSessionID no Save: ';var_dump($_SESSION[Cart::SESSION]['idcart']); 
-
 			$cart->get((int)$_SESSION[Cart::SESSION]['idcart']);
-
-			//echo "<br>".'after get in getFromSessionID : ';var_dump($cart); 
 
 		} else {
 
 			$cart->getFromSessionID();
-
-			//echo "<br>".'before getFromSessionID after Save: ';var_dump($cart); 
 
 			if (!(int)$cart->getidcart() > 0) {
 
@@ -80,8 +72,6 @@ class Cart extends Model {
 			':dessessionid'=>session_id()
 		]);
 
-		//echo 'Save after select: ';var_dump($results); exit;
-
 		if (count($results) > 0) {
 
 			$this->setData($results[0]);
@@ -99,9 +89,6 @@ class Cart extends Model {
 			':idcart'=>$idcart
 		]);
 
-
-		//echo "<br>"."function get results>idcart=$idcart  " ;var_dump($results); 
-
 		if (count($results) > 0) {
 
 			$this->setData($results[0]);
@@ -109,7 +96,6 @@ class Cart extends Model {
 		}
 
 	}
-
 
 	public function save()
 	{
@@ -241,7 +227,7 @@ class Cart extends Model {
 				'sCdMaoPropria'=>'N',						// 'S/N' - Em mãos
 				'nVlValorDeclarado'=>'0',					// Valor Declarado
 				'sCdAvisoRecebimento'=>'S'					// 'S/N' - Aviso de recebimento				
-			]);  //			echo json_encode($qs);
+			]);
 
 			$xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs);
 
