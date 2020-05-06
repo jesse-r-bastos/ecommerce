@@ -11,7 +11,6 @@ $app->config('debug', true);
 //-------------------------------------------- CONTROLE  DAS  ROTAS:
 require_once("site.php");					// Sites Principais
 require_once("functions.php");				// Funções Compartilhadas
-require_once("users.php");					// CRUD de Usuários
 require_once("admin.php");					// Rotas de Login
 require_once("admin-users.php"); 			// Controle de Senhas de Usuários
 require_once("admin-categorias.php");		// CRUD de Categorias

@@ -93,8 +93,6 @@ class Category extends Model
 
 	}
 
-
-
 	public function getProducts($related = true) 
 	{
 

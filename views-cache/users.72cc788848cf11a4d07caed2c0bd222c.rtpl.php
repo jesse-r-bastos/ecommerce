@@ -19,7 +19,17 @@
   		<div class="box box-primary">
             
             <div class="box-header">
-              <a href="/admin/users/create" class="btn btn-success">Cadastrar Usuário</a>
+              <a href="/admin/users/create" class="btn btn-success fa fa-user" >  Cadastrar Usuário</a>
+              <div class="box-tools">
+                <form action="/admin/users">
+                  <div class="input-group input-group-sm" style="width: 250px; font-family: Lucida Console;">
+                    <input type="text" name="search" class="form-control pull-right" placeholder="Search" value="<?php echo htmlspecialchars( $search, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
+                    <div class="input-group-btn">
+                      <button type="submit" class="btn btn-default btn-warning "><i class="fa fa-search"></i></button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
 
             <div class="box-body no-padding">
@@ -52,6 +62,13 @@
               </table>
             </div>
             <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right"> 
+                <?php $counter1=-1;  if( isset($pages) && ( is_array($pages) || $pages instanceof Traversable ) && sizeof($pages) ) foreach( $pages as $key1 => $value1 ){ $counter1++; ?>
+                <li><a style="font-family: Arial Black;" href="<?php echo htmlspecialchars( $value1["href"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["text"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a> </li>
+                <?php } ?>
+              </ul>
+            </div>
           </div>
   	</div>
   </div>
