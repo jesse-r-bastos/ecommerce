@@ -16,15 +16,7 @@ require_once("admin.php");					// Rotas de Login
 require_once("admin-users.php"); 			// Controle de Senhas de Usuários
 require_once("admin-categorias.php");		// CRUD de Categorias
 require_once("admin-products.php");			// CRUD de Produtos
-
-
-
-
-
-
-
-
-
+require_once("admin-orders.php");			// CRUD de Produtos
 
 $app->run();
 

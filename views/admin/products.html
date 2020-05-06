@@ -2,7 +2,7 @@
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1>
+  <h1 class="fa fa-object-group fa-3x" >
     Lista de Produtos
   </h1>
   <ol class="breadcrumb">

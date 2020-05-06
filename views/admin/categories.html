@@ -2,7 +2,7 @@
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1>
+  <h1 class="fa fa-sort-alpha-desc">
     Lista de Categorias
   </h1>
   <ol class="breadcrumb">
