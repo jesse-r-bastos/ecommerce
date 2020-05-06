@@ -25,7 +25,7 @@
                   <div class="input-group input-group-sm" style="width: 250px; font-family: Lucida Console;">
                     <input type="text" name="search" class="form-control pull-right" placeholder="Search" value="<?php echo htmlspecialchars( $search, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
                     <div class="input-group-btn">
-                      <button type="submit" class="btn btn-default btn-warning "><i class="fa fa-search"></i></button>
+                      <button type="submit" class="btn btn-default "><i class="fa fa-search"></i></button>
                     </div>
                   </div>
                 </form>
@@ -34,14 +34,14 @@
 
             <div class="box-body no-padding">
               <table class="table table-striped"  >
-                <thead style="background-color: #Ccc;">
-                  <tr>
+                <thead style="background-color: #CCC;">
+                  <tr style="color:blue;">
                     <th style="width: 10px; ">#</th>
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Login</th>
-                    <th style="width: 60px">Admin</th>
-                    <th style="width: 140px">&nbsp;</th>
+                    <th style="width: 60px">ADM</th>
+                    <th style="width: 140px"> ___ Atualização ___</th>                    
                   </tr>
                 </thead>
                 <tbody style="background-color: #C2D6E7;">

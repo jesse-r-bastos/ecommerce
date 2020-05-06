@@ -12,7 +12,7 @@
 </section>
 
 <!-- Main content -->
-<section class="content">
+<section class="content" style="background-color: #CDF;">
 
   <div class="row">
   	<div class="col-md-12">
@@ -22,7 +22,7 @@
               <a href="/admin/categories/create" class="btn btn-success fa fa-sort-alpha-desc">  Cadastrar Categoria</a>
               <div class="box-tools">
                 <form action="/admin/categories">
-                  <div class="input-group input-group-sm" style="width: 300px; font-family: Lucida Console;">
+                  <div class="input-group input-group-sm" style="width: 250px; font-family: Lucida Console;">
                     <input type="text" name="search" class="form-control pull-right" placeholder="Search" value="<?php echo htmlspecialchars( $search, ENT_COMPAT, 'UTF-8', FALSE ); ?>">
                     <div class="input-group-btn">
                       <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -33,12 +33,13 @@
             </div>
 
             <div class="box-body no-padding">
-              <table class="table table-striped" style="font-family: Lucida Console;">
+              <table class="table table-striped" >
                 <thead style="background-color: #CCC;">
-                  <tr >
+                  <tr style="color:blue;">
                     <th style="width: 10px">#</th>
                     <th>Nome da Categoria</th>
-                    <th style="width: 280px">&nbsp;</th>
+                    <th style="width: 210px"> _________ Atualização ______</th>
+
                   </tr>
                 </thead>
                 <tbody style="background-color: #C2D6E7">
