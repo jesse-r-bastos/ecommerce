@@ -18,9 +18,13 @@
   	<div class="col-md-12">
   		<div class="box box-primary">
 
+            <div class="box-header">
+              <a href="" class="btn btn-success fa fa-shopping-cart fa-2x">  _Pedidos_</a>
+            </div>
+
             <div class="box-body no-padding">
               <table class="table table-striped">
-                <thead style="text-align: center;color:blue;">
+                <thead style="text-align: center;background-color: #CCC;" >
                   <tr >
                     <th style="width: 15px;" class="fa fa-book fa-fw"></th>
                     <th>__ Cliente __</th>
@@ -31,7 +35,7 @@
                     <th style="width: 210px"> _________ Updates __________</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="background-color: #C2D6E7">
                   <?php $counter1=-1;  if( isset($orders) && ( is_array($orders) || $orders instanceof Traversable ) && sizeof($orders) ) foreach( $orders as $key1 => $value1 ){ $counter1++; ?>
                   <tr style="text-align: center;">
                     <td><strong><?php echo htmlspecialchars( $value1["idorder"], ENT_COMPAT, 'UTF-8', FALSE ); ?></strong></td>

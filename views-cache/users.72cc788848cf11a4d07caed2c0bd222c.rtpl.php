@@ -33,10 +33,10 @@
             </div>
 
             <div class="box-body no-padding">
-              <table class="table table-striped">
-                <thead>
+              <table class="table table-striped"  >
+                <thead style="background-color: #Ccc;">
                   <tr>
-                    <th style="width: 10px">#</th>
+                    <th style="width: 10px; ">#</th>
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Login</th>
@@ -44,7 +44,7 @@
                     <th style="width: 140px">&nbsp;</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="background-color: #C2D6E7;">
                   <?php $counter1=-1;  if( isset($users) && ( is_array($users) || $users instanceof Traversable ) && sizeof($users) ) foreach( $users as $key1 => $value1 ){ $counter1++; ?>
                   <tr>
                     <td><?php echo htmlspecialchars( $value1["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?></td>

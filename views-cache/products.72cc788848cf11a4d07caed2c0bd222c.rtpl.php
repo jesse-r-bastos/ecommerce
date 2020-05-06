@@ -24,7 +24,7 @@
 
             <div class="box-body no-padding">
               <table class="table table-striped">
-                <thead>
+                <thead style="background-color: #CCC;">
                   <tr style="color:blue;">
                     <th style="width: 10px">#</th>
                     <th>Nome da Produto</th>
@@ -37,7 +37,7 @@
                     <th  style="text-align: right;">____Atualização___</th>    
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="background-color: #C2D6E7">
                   <?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
 
                   <tr style="text-align: right;">
