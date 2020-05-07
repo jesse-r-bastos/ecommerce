@@ -55,10 +55,11 @@ class Address extends Model {
 
 		if ( is_null($idAddress) ) $idAddress = 0 ; var_dump($idAddress);
 
-		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :descomplement, :descity, :desstate, :descountry, :nrzipcode, :desdistrict)", [
+		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplement, :descity, :desstate, :descountry, :nrzipcode, :desdistrict)", [
 			':idaddress'=>$idAddress,
 			':idperson'=>$this->getidperson(),
 			':desaddress'=>utf8_decode($this->getdesaddress()),
+			':desnumber'=>$this->getdesnumber(),
 			':descomplement'=>utf8_decode($this->getdescomplement()),
 			':descity'=>utf8_decode($this->getdescity()),
 			':desstate'=>utf8_decode($this->getdesstate()),
