@@ -289,7 +289,6 @@ class User extends Model
 
 	public static function setError($msg)
 	{
-
 		$_SESSION[User::ERROR] = $msg;
 
 	} // end function setError
@@ -314,7 +313,6 @@ class User extends Model
 
 	public static function setSuccess($msg)
 	{
-
 		$_SESSION[User::SUCCESS] = $msg;
 
 	} // end function setSUCCESS

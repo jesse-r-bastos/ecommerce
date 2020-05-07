@@ -11,19 +11,7 @@ use \Hcode\Model\User;
 use \Hcode\Model\Order;
 use \Hcode\Model\OrderStatus;
 
-// ----- Rotas Principal                  ---------------------[INICIO]
-$app->get("/", function() {
 
-	$products = Product::listAll();
-
-	$page = new Page();
-	
-	$page->setTpl("index",[
-		'products'=>Product::checkList($products)
-	]);
-
-});
-// 
 // ----- Rotas para Acessar Category      ---------------------[INICIO]
 //
 $app->get("/categories/:idcategory", function($idcategory) {
@@ -670,10 +658,23 @@ $app->post("/profile/change-password", function() {
 	header("Location: /profile/change-password");
 	exit;
 });
-
-
 // SENHA       -------------------------------------------------[FINAL]
 // 
+// ----- Rotas Principal                  ---------------------[INICIO]
+$app->get("/", function() {
+
+	$products = Product::listAll();
+
+	$page = new Page();
+	
+	$page->setTpl("index",[
+		'products'=>Product::checkList($products)
+	]);
+
+});
+// Principal  -------------------------------------------------[FINAL]
+
+
 
 ?>
 

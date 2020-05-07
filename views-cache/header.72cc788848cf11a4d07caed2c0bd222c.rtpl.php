@@ -253,13 +253,13 @@ desired effect
       <!-- /.search form -->
 
       <!-- Sidebar Menu -->
-      <ul class="sidebar-menu">
-        <li class="header">HEADER</li>
+      <ul class="sidebar-menu" style=" font-family: Lucida Console;">
+        <li class="header" style="background-color: #DFF;"><h5>Controles :</h5> </li>
         <!-- Optionally, you can add icons to the links -->
-        <li><a href="/admin/users"><i class="fa fa-users"></i> <span>Usuários</span></a></li>
-        <li><a href="/admin/categories"><i class="fa fa-link"></i> <span>Categorias</span></a></li>
-        <li><a href="/admin/products"><i class="fa fa-link"></i> <span>Produtos</span></a></li>
-        <li><a href="/admin/orders"><i class="fa fa-shopping-cart"></i> <span>Pedidos</span></a></li>
+        <li><a href="/admin/users"><i class="fa fa-users fa-2x"></i> <span>&nbsp;  Usuários</span></a></li>
+        <li><a href="/admin/categories"><i class="fa fa-sort-alpha-desc fa-2x"></i> <span>&nbsp;  Categorias</span></a></li>
+        <li><a href="/admin/products"><i class="fa fa-object-group fa-2x"></i> <span>&nbsp;  Produtos</span></a></li>
+        <li><a href="/admin/orders"><i class="fa fa-shopping-cart fa-2x"></i> <span>&nbsp;  Pedidos</span></a></li>
 
 <!--
         <li class="treeview">
