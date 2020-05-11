@@ -253,11 +253,24 @@ $app->post("/checkout", function() {
 
 	$order->save();
 
-	header("Location: /order/".$order->getidorder()."/pagseguro");	
+	switch ((int)$_POST['payment-method']) {
+
+		case 1:
+			header("Location: /order/".$order->getidorder()."/pagseguro");		
+			break;
+		
+		case 2:
+			header("Location: /order/".$order->getidorder()."/paypal");		
+			break;
+	}
+	
 	exit;
+
 });
 // Checkout    -------------------------------------------------[FINAL]
-// 
+//
+// -GET- Pagamento com PagSeguro       ------------------------[INICIO]
+//
 $app->get("/order/:idorder/pagseguro", function($idorder){
 
 	User::verifyLogin(false);
@@ -283,8 +296,33 @@ $app->get("/order/:idorder/pagseguro", function($idorder){
 		]
 	]);
 });
+// PagSeguro   -------------------------------------------------[FINAL]
+//
+// -GET- Pagamento com PayPal          ------------------------[INICIO]
+//
+$app->get("/order/:idorder/paypal", function($idorder){
 
+	User::verifyLogin(false);
 
+	$order = new Order();
+
+	$order->get((int)$idorder);
+
+	$cart = $order->getCart();
+
+	$page = new Page([
+		'header'=>false,
+		'footer'=>false
+	]);
+
+	$page->setTpl("payment-paypal",[
+		'order'=>$order->getValues(),
+		'_cart'=>$cart->getValues(),
+		'products'=>$cart->getProducts(),
+	]);
+});
+// PayPal      -------------------------------------------------[FINAL]
+//
 // ----- Rotas para Finalização do Pedido- Order / Boleto -----[INICIO]
 //
 $app->get("/order/:idorder", function($idorder) {
